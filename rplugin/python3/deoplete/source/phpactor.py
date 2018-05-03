@@ -21,16 +21,6 @@ class Source(Base):
         return len(re.sub('[\$0-9A-Za-z_]+$', '', context['input']))
 
     def gather_candidates(self, context):
-        self._phpactor = self.vim.eval(
-            r"""globpath(&rtp, 'bin/phpactor', 1)"""
-        )
-
-        if not self._phpactor:
-            self.print_error(
-                'phpactor not found,'
-                ' please install https://github.com/phpactor/phpactor'
-            )
-
         candidates = []
 
         line_offset = int(self.vim.eval('line2byte(line("."))'))
@@ -38,8 +28,7 @@ class Source(Base):
         offset = line_offset + column_offset + len(context['complete_str'])
 
         args = [
-            'php',
-            self._phpactor,
+            'phpactor',
             'rpc',
             '--working-dir=%s' % self.vim.eval('getcwd()')
         ]
